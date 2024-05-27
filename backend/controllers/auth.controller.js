@@ -2,8 +2,11 @@
 // To make the file organized in a more clean way
 
 export const signup = (req, res) => {
-    res.send("SignupUser");
-    console.log("SignupUser");
+    try {
+        const {fullName, userName, password, confirmPassword, gender} = req.body;
+    } catch(err){
+
+    }
 }
 
 export const login = (req, res) => {
