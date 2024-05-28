@@ -2,6 +2,7 @@
 // To make the file organized in a more clean way
 
 import User from "../models/user.model.js";
+import generateTokenandSetCookie from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
     try {
@@ -35,6 +36,9 @@ export const signup = async (req, res) => {
 
         //Now save this new User to the database
         if(newUser) {
+            // Generate JWT TOKEN here
+            generateTokenandSetCookie(newUser._id, res);
+
             await newUser.save();
 
             res.status(201).json({
@@ -46,7 +50,7 @@ export const signup = async (req, res) => {
         }else {
             res.send(400).json({error: "Invalid user data"});
         }
-        
+
     } catch(err){
         console.log("Error in signup Controller", err.message);
         res.status(500).json({
