@@ -90,6 +90,14 @@ export const login = async (req, res) => {
     }
 }
 
-export const logout = (req, res) => {
-    console.log("LogoutUser");
+//Logout Functionality
+export const logout = async (req, res) => {
+    try {
+        //This jwtToken key should match with the key present in the cookie
+        res.cookie("jwtToken", "", { maxAge: 0 });
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch(err) {
+        console.log("Error in logout controller", err.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 }
