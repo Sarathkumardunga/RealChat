@@ -56,3 +56,30 @@ export const sendMessage = async (req, res) => {
         });
     }
 };
+
+export const getMessages = async (req, res) => {
+    try {
+        const { id: userToChatId } = req.params;
+        const senderId  = req.user._id; //This we get from the protectRoute middleware
+
+        const conversation = await Conversation.findOne({
+            participants: { $all: [senderId, userToChatId] } 
+            //But the conversation has only msg id's not the messages.
+            //So, inorder to get the messages, mongoDb uses .populate method
+        }).populate("messages");    // So instead of returning id's it returns the messages
+
+        if(!conversation) {
+            return res.status(200).json([]);
+        }
+
+        const messagesOfUser = conversation.messages;
+        
+        res.status(201).json(messagesOfUser);
+        
+    } catch (error) {
+        console.log("Error in getMessage controller: ", error.message);
+        res.status(500).json({
+            error: "Internal Server Error"
+        });
+    }
+};
